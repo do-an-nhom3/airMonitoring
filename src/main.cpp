@@ -29,8 +29,10 @@ bool ledState = 0, buzzerState = 0, RL1State = 0;
 bool gasDetect = 0;
 bool fireAlert = 0, airAlert = 0;
 int pm1State = 0, pm25State = 0, pm10State = 0;
-const char* ssid = "Minh Khoi";
-const char* password = "Minhkhoi2019";
+const char* ssid_st = "Minh Khoi";
+const char* password_st = "Minhkhoi2019";
+const char* ssid_nd = "Redmi 9C";
+const char* password_nd = "68686868";
 char default_num[13] = {'+', '8', '4', '9', '8', '9', '3', '4', '3', '1', '1', '4' };
 float humi = 0, tempC = 0, tempF = 0;
 
@@ -130,7 +132,11 @@ void wifi_Init(){
   lcd.setCursor(0,0);
   lcd.print("Initializing...");
   delay(1000);
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid_st, password_st);
+  delay(2000);
+  if(WiFi.status() != WL_CONNECTED){
+    WiFi.begin(ssid_nd, password_nd);
+  }
   while (WiFi.status() != WL_CONNECTED);
   lcd.setCursor(0,1);
   lcd.print("WiFi connected...!");
