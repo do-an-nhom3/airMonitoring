@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <title>Air Monitoring</title>
+  <style>
+    body {
+      min-width: 300px;
+      max-width: 1600px;
+    	height: 300px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-family: Arial;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+    h3 {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+    <div style="float: right; display: block;">
+        <h3>GVHD: TS.Lưu Hoàng Minh</h3>
+        <h3>Nhóm: 03</h3>
+        <h3>Lý Văn Du: 2231051204</h3>
+        <h3>Nguyễn Trọng Đức: 2231053203</h3>
+        <h3>Huỳnh Hữu Hùng: 2231053207</h3>
+    </div>
+    <br>
+    <br>
+    <br><br><br><br><br><br><br><br><br><br>
+
+  <h2>ESP Air Monitoring</h2>
+  <div id="chart-temperature" class="container"></div>
+  <br><br><br><br>
+  <div id="chart-humidity" class="container"></div>
+  <br><br><br><br>
+  <div id="chart-pm25" class="container"></div>
+  <br><br><br><br>
+  <div id="chart-pm10" class="container"></div>
+  <br><br><br><br>
+  <div id="chart-pm100" class="container"></div>
+</body>
+<script>
+var chartT = new Highcharts.Chart({
+  chart:{ renderTo : 'chart-temperature' },
+  title: { text: 'DHT22 Temperature' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#059e8a' }
+  },
+  xAxis: { type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Temperature (Celsius)' },
+    min: 20,
+    max: 60
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var currentTime = new Date();
+      var x = Date.UTC(
+        currentTime.getUTCFullYear(),
+        currentTime.getUTCMonth(),
+        currentTime.getUTCDate(),
+        currentTime.getUTCHours() + 7,
+        currentTime.getUTCMinutes(),
+        currentTime.getUTCSeconds()
+      );
+      var y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartT.series[0].data.length > 40) {
+        chartT.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartT.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET", "/temperature", true);
+  xhttp.send();
+}, 5000 ) ;
+
+var chartH = new Highcharts.Chart({
+  chart:{ renderTo:'chart-humidity' },
+  title: { text: 'DHT22 Humidity' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Humidity (%)' },
+    min: 40,
+    max: 99
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var currentTime = new Date();
+      var x = Date.UTC(
+        currentTime.getUTCFullYear(),
+        currentTime.getUTCMonth(),
+        currentTime.getUTCDate(),
+        currentTime.getUTCHours() + 7,
+        currentTime.getUTCMinutes(),
+        currentTime.getUTCSeconds()
+      );
+      var y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartH.series[0].data.length > 40) {
+        chartH.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartH.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET", "/humidity", true);
+  xhttp.send();
+}, 5000 ) ;
+
+
+var chartP = new Highcharts.Chart({
+  chart:{ renderTo:'chart-pm25' },
+  title: { text: 'PMS7003 PM2.5' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#18009c' }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'PM2.5 (ug/m3)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var currentTime = new Date();
+      var x = Date.UTC(
+        currentTime.getUTCFullYear(),
+        currentTime.getUTCMonth(),
+        currentTime.getUTCDate(),
+        currentTime.getUTCHours() + 7,
+        currentTime.getUTCMinutes(),
+        currentTime.getUTCSeconds()
+      );
+      var y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartP.series[0].data.length > 40) {
+        chartP.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartP.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET", "/pm25", true);
+  xhttp.send();
+}, 5000 );
+
+
+var chartQ = new Highcharts.Chart({
+  chart:{ renderTo:'chart-pm10' },
+  title: { text: 'PMS7003 PM1.0' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#18009c' }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'PM1.0 (ug/m3)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var currentTime = new Date();
+      var x = Date.UTC(
+        currentTime.getUTCFullYear(),
+        currentTime.getUTCMonth(),
+        currentTime.getUTCDate(),
+        currentTime.getUTCHours() + 7,
+        currentTime.getUTCMinutes(),
+        currentTime.getUTCSeconds()
+      );
+      var y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartQ.series[0].data.length > 40) {
+        chartQ.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartQ.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET", "/pm10", true);
+  xhttp.send();
+}, 5000 );
+
+
+var chartK = new Highcharts.Chart({
+  chart:{ renderTo:'chart-pm100' },
+  title: { text: 'PMS7003 PM10' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#18009c' }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'PM10 (ug/m3)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var currentTime = new Date();
+      var x = Date.UTC(
+        currentTime.getUTCFullYear(),
+        currentTime.getUTCMonth(),
+        currentTime.getUTCDate(),
+        currentTime.getUTCHours() + 7,
+        currentTime.getUTCMinutes(),
+        currentTime.getUTCSeconds()
+      );
+      var y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartK.series[0].data.length > 40) {
+        chartK.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartK.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET", "/pm100", true);
+  xhttp.send();
+}, 5000 );
+
+</script>
+</html>
